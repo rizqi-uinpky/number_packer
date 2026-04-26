@@ -1,0 +1,23 @@
+{
+  "name": "number_packer",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/rizqi-uinpky/number_packer#readme",
+  "bugs": {
+    "url": "https://github.com/rizqi-uinpky/number_packer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rizqi-uinpky/number_packer.git"
+  },
+  "license": "ISC",
+  "author": "Ahmad Rizqi",
+  "type": "module",
+  "main": "number_packer.ts",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.1"
+  }
+}
