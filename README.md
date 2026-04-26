@@ -15,10 +15,8 @@ A versatile and efficient TypeScript library for packing multiple numbers of var
 ## Installation
 
 ```bash
-npm install number-packer
+npm install number_packer
 ```
-
-*(Note: This assumes the package is published as `number-packer` on npm.)*
 
 ## Quick Start
 
