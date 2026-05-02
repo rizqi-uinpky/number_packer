@@ -1,23 +1,55 @@
 {
-  "name": "number_packer",
+  "name": "number-packer",
   "version": "1.0.0",
-  "description": "",
-  "homepage": "https://github.com/rizqi-uinpky/number_packer",
+  "description": "A versatile and efficient TypeScript library for packing/unpacking numbers of varying bit-lengths into compact binary buffers.",
   "bugs": {
-    "url": "https://github.com/rizqi-uinpky/number_packer/issues"
+    "url": "https://github.com/rizqi-uinpky/number-packer/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rizqi-uinpky/number_packer.git"
+    "url": "git+https://github.com/rizqi-uinpky/number-packer.git"
   },
-  "license": "ISC",
+  "homepage": "https://github.com/rizqi-uinpky/number-packer#readme",
+  "license": "MIT",
   "author": "Ahmad Rizqi",
   "type": "module",
-  "main": "number_packer.ts",
+  "main": "dist/number-packer.js",
+  "types": "dist/number-packer.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/number-packer.js",
+      "types": "./dist/number-packer.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "typescript": "^5.9.3",
     "vitest": "^1.6.1"
-  }
+  },
+  "keywords": [
+    "binary",
+    "pack",
+    "unpack",
+    "bit",
+    "bit-packing",
+    "bitmask",
+    "buffer",
+    "serialization",
+    "network",
+    "protocol",
+    "compact",
+    "typescript",
+    "bigint"
+  ]
 }

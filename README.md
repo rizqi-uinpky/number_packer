@@ -1,3 +1,6 @@
+[![English](https://img.shields.io/badge/Language-English-blue.svg)](README.md)
+[![Bahasa Indonesia](https://img.shields.io/badge/Bahasa-Indonesia-red.svg)](README.id.md)
+
 # Number Packer
 
 A versatile and efficient TypeScript library for packing multiple numbers of varying bit-lengths into a compact binary buffer and unpacking them back. Ideal for network protocols, file formats, or any scenario where data size is critical. Supports both `number` and `bigint`.
@@ -15,7 +18,7 @@ A versatile and efficient TypeScript library for packing multiple numbers of var
 ## Installation
 
 ```bash
-npm install number_packer
+npm install number-packer
 ```
 
 ## Quick Start
@@ -25,7 +28,7 @@ npm install number_packer
 The easiest way to use the library is through the static `pack` and `unpack` functions.
 
 ```typescript
-import { pack, unpack } from './number_packer';
+import { pack, unpack } from 'number-packer';
 
 // Define a schema: [unsigned 5-bit, unsigned 10-bit, signed 3-bit]
 const schema = [{ bit: 5 }, { bit: 10 }, { bit: 3, signed: true }];
@@ -35,7 +38,7 @@ const myNumbers = [15, 512, -3];
 
 // Pack the numbers into a buffer
 const packedBuffer = pack(schema, myNumbers);
-console.log(packedBuffer); // e.g., Uint8Array(3) [ 124, 2, 224 ]
+console.log(packedBuffer); // Uint8Array(3) [ 124, 1, 64 ]
 
 // Unpack the buffer back into numbers
 const unpackedNumbers = unpack(schema, packedBuffer);
@@ -47,7 +50,7 @@ console.log(unpackedNumbers); // [ 15, 512, -3 ]
 For more complex or repeated operations, create an instance of `NumberPacker`.
 
 ```typescript
-import NumberPacker from './number_packer';
+import NumberPacker from 'number-packer';
 
 // Create an instance with a schema
 const packer = new NumberPacker({ bit: 8, signed: true }, { bit: 16 });
@@ -55,10 +58,6 @@ const packer = new NumberPacker({ bit: 8, signed: true }, { bit: 16 });
 // Pack data
 const buffer1 = packer.pack([-10, 1000]);
 console.log(buffer1);
-
-// You can reuse the same instance to pack different data
-const buffer2 = packer.pack();
-console.log(buffer2);
 
 // Unpack data
 const data1 = packer.unpack(buffer1);
@@ -91,8 +90,8 @@ Creates a new `NumberPacker` instance with an initial schema.
 
 ### Class Methods
 
-*   `.pack(numbers: NUMBER[], buffer?: Uint8Array, offset?: number): Uint8Array`
-    Packs an array of numbers into a buffer according to the instance's schema. If no `buffer` is provided, a new one is created.
+*   `.pack(numbers: NUMBER[], buffer?: Uint8Array, offset?: number, bufLen?: number): Uint8Array`
+    Mengepak array angka ke dalam buffer sesuai dengan skema instance. Jika `buffer` tidak disediakan, buffer baru akan dibuat.
 
 *   `.unpack(buffer: Uint8Array, result?: NUMBER[], offset?: number): NUMBER[]`
     Unpacks an array of numbers from a buffer.
@@ -109,15 +108,15 @@ Creates a new `NumberPacker` instance with an initial schema.
 *   `.autoSize(arr: NUMBER[] | number, val?: NUMBER, groupIndex?: number): this`
     Automatically sets the bit size for schema entries based on provided values.
 
-*   `.getRange(index: number): { min: NUMBER, max: NUMBER }`
-    Gets the minimum and maximum value a specific schema entry can hold.
+*   `.getRange(index: number): { min: NUMBER, max: NUMBER } | undefined`
+    Gets the minimum and maximum value a specific schema entry can hold. Returns `undefined` if the index is out of bounds.
 
 ### Error Handling Properties
 
 *   `throwOnSmallBuffer: boolean`: (Default `false`) If `true`, `pack` throws an error if the provided buffer is too small.
 *   `throwOnLessData: boolean`: (Default `false`) If `true`, `pack` throws an error if the number of values is less than what a fixed-size schema expects.
 *   `throwOnSmallBufferForLimitedRepeat: boolean`: (Default `false`) If `true`, `unpack` throws an error if the buffer ends before a fixed-repetition schema group is fully unpacked.
-*   `onOverflow: (details) => void`: A callback function that is triggered during packing if a value is outside the storable range for its bit size.
+*   `onOverflow: (details: { value, index, min, max, bit, signed }) => void`: A callback function that is triggered during packing if a value is outside the storable range for its bit size.
 
 ## Advanced Usage
 
@@ -126,7 +125,7 @@ Creates a new `NumberPacker` instance with an initial schema.
 Use `schemaGroups` to define repeating patterns. This is useful for lists of objects. To unpack, you often need to read the header/count first, then configure the packer with the dynamic count and read the rest of the data.
 
 ```typescript
-import NumberPacker from './number_packer';
+import NumberPacker from 'number-packer';
 
 // Schema for a list of players, each with an ID, x, and y position.
 
@@ -157,12 +156,12 @@ const unpackedData = [];
 // 1. Unpack the header to find out how many players there are.
 const headerUnpacker = new NumberPacker({ bit: 8 });
 const header = headerUnpacker.unpack(buffer);
-const dynamicPlayerCount = header;
+const dynamicPlayerCount = header[0] as number;
 
 // 2. Set the full schema on the original packer and unpack the whole buffer.
 packer.schemaGroups([
     [1, [{ bit: 8 }]],
-    [dynamicPlayerCount, [{ bit: 8 }, { bit: 7 }, { bit: 7 }]]
+    [dynamicPlayerCount, [{ bit: 8 }, { bit: 7 }, { bit: 7 }]],
 ]);
 packer.unpack(buffer, unpackedData);
 
@@ -174,14 +173,14 @@ console.log(unpackedData); // [ 3, 101, 50, 80, 102, 52, 83, 103, 48, 79 ]
 For lists where the count isn't known beforehand, you can use `Infinity` (represented by `true` in `schemaGroups`). The packer/unpacker will continue until it runs out of numbers (packing) or buffer space (unpacking).
 
 ```typescript
-import NumberPacker from './number_packer';
+import NumberPacker from 'number-packer';
 
 const itemSchema = [{ bit: 8 }, { bit: 16 }]; // e.g., itemID, itemValue
 const packer = new NumberPacker().schemaGroups([
     [true, itemSchema] // 'true' means repeat until the end
 ]);
 
-const items =;
+const items = [ 1, 1000, 2, 5000, 3, 2500 ];
 const buffer = packer.pack(items);
 
 // Unpack will read until the end of the buffer
@@ -194,7 +193,7 @@ console.log(unpackedItems); // [ 1, 1000, 2, 5000, 3, 2500 ]
 The library automatically uses `BigInt` for numbers requiring more than 31 bits.
 
 ```typescript
-import { pack, unpack } from './number_packer';
+import { pack, unpack } from 'number-packer';
 
 // A 64-bit unsigned integer
 const schema = [{ bit: 64 }];
@@ -203,6 +202,6 @@ const largeNumber = [12345678901234567890n];
 const buffer = pack(schema, largeNumber);
 const result = unpack(schema, buffer);
 
-console.log(result === largeNumber); // true
-console.log(typeof result); // bigint
+console.log(result[0] === largeNumber[0]); // true
+console.log(typeof result[0]); // bigint
 ```
