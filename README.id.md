@@ -156,7 +156,7 @@ const unpackedData = [];
 // 1. Buka header untuk mengetahui berapa banyak pemain yang ada.
 const headerUnpacker = new NumberPacker({ bit: 8 });
 const header = headerUnpacker.unpack(buffer);
-const dynamicPlayerCount = header as number;
+const dynamicPlayerCount = header[0] as number;
 
 // 2. Atur skema lengkap pada packer asli dan buka seluruh buffer.
 packer.schemaGroups([

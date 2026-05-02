@@ -4,6 +4,8 @@ node_modules
 /dist
 /lib
 
+/test
+
 # Log files
 *.log
 

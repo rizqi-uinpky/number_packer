@@ -91,7 +91,7 @@ Creates a new `NumberPacker` instance with an initial schema.
 ### Class Methods
 
 *   `.pack(numbers: NUMBER[], buffer?: Uint8Array, offset?: number, bufLen?: number): Uint8Array`
-    Mengepak array angka ke dalam buffer sesuai dengan skema instance. Jika `buffer` tidak disediakan, buffer baru akan dibuat.
+    Packs an array of numbers into a buffer according to the instance's schema. If no `buffer` is provided, a new one is created.
 
 *   `.unpack(buffer: Uint8Array, result?: NUMBER[], offset?: number): NUMBER[]`
     Unpacks an array of numbers from a buffer.
