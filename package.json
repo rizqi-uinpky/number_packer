@@ -1,6 +1,6 @@
 {
 	"name": "number-packer",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A versatile and efficient TypeScript library for packing/unpacking numbers of varying bit-lengths into compact binary buffers.",
 	"bugs": {
 		"url": "https://github.com/rizqi-uinpky/number-packer/issues"
